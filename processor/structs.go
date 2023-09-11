@@ -40,19 +40,19 @@ type Language struct {
 
 // LanguageFeature is a struct which represents the conversion from Language into what is used for matching
 type LanguageFeature struct {
-	Complexity            *Trie
-	MultiLineComments     *Trie
-	SingleLineComments    *Trie
-	Strings               *Trie
-	Tokens                *Trie
-	Nested                bool
-	ComplexityCheckMask   byte
-	SingleLineCommentMask byte
-	MultiLineCommentMask  byte
-	StringCheckMask       byte
-	ProcessMask           byte
-	Keywords              []string
-	Quotes                []Quote
+	Complexity         *Trie
+	MultiLineComments  *Trie
+	SingleLineComments *Trie
+	Strings            *Trie
+	Tokens             *Trie
+	Nested             bool
+	// ComplexityCheckMask   byte
+	// SingleLineCommentMask byte
+	// MultiLineCommentMask byte
+	// StringCheckMask       byte
+	ProcessMask byte
+	Keywords    []string
+	Quotes      []Quote
 }
 
 // FileJobCallback is an interface that FileJobs can implement to get a per line callback with the line type
