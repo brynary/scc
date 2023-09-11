@@ -46,13 +46,9 @@ type LanguageFeature struct {
 	Strings            *Trie
 	Tokens             *Trie
 	Nested             bool
-	// ComplexityCheckMask   byte
-	// SingleLineCommentMask byte
-	// MultiLineCommentMask byte
-	// StringCheckMask       byte
-	ProcessMask byte
-	Keywords    []string
-	Quotes      []Quote
+	ProcessMask        byte
+	Keywords           []string
+	Quotes             []Quote
 }
 
 // FileJobCallback is an interface that FileJobs can implement to get a per line callback with the line type
