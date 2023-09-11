@@ -374,60 +374,48 @@ func processLanguageFeature(name string, value Language) {
 	mlCommentTrie := &Trie{}
 	stringTrie := &Trie{}
 	tokenTrie := &Trie{}
-
-	complexityMask := byte(0)
-	singleLineCommentMask := byte(0)
-	multiLineCommentMask := byte(0)
-	stringMask := byte(0)
 	processMask := byte(0)
 
 	for _, v := range value.ComplexityChecks {
-		complexityMask |= v[0]
+		if !Complexity {
+			processMask |= v[0]
+		}
+
 		complexityTrie.Insert(TComplexity, []byte(v))
 		if !Complexity {
 			tokenTrie.Insert(TComplexity, []byte(v))
 		}
 	}
-	if !Complexity {
-		processMask |= complexityMask
-	}
 
 	for _, v := range value.LineComment {
-		singleLineCommentMask |= v[0]
+		processMask |= v[0]
 		slCommentTrie.Insert(TSlcomment, []byte(v))
 		tokenTrie.Insert(TSlcomment, []byte(v))
 	}
-	processMask |= singleLineCommentMask
 
 	for _, v := range value.MultiLine {
-		multiLineCommentMask |= v[0][0]
+		processMask |= v[0][0]
 		mlCommentTrie.InsertClose(TMlcomment, []byte(v[0]), []byte(v[1]))
 		tokenTrie.InsertClose(TMlcomment, []byte(v[0]), []byte(v[1]))
 	}
-	processMask |= multiLineCommentMask
 
 	for _, v := range value.Quotes {
-		stringMask |= v.Start[0]
+		processMask |= v.Start[0]
 		stringTrie.InsertClose(TString, []byte(v.Start), []byte(v.End))
 		tokenTrie.InsertClose(TString, []byte(v.Start), []byte(v.End))
 	}
-	processMask |= stringMask
 
 	LanguageFeaturesMutex.Lock()
 	LanguageFeatures[name] = LanguageFeature{
-		Complexity:            complexityTrie,
-		MultiLineComments:     mlCommentTrie,
-		SingleLineComments:    slCommentTrie,
-		Strings:               stringTrie,
-		Tokens:                tokenTrie,
-		Nested:                value.NestedMultiLine,
-		ComplexityCheckMask:   complexityMask,
-		MultiLineCommentMask:  multiLineCommentMask,
-		SingleLineCommentMask: singleLineCommentMask,
-		StringCheckMask:       stringMask,
-		ProcessMask:           processMask,
-		Keywords:              value.Keywords,
-		Quotes:                value.Quotes,
+		Complexity:         complexityTrie,
+		MultiLineComments:  mlCommentTrie,
+		SingleLineComments: slCommentTrie,
+		Strings:            stringTrie,
+		Tokens:             tokenTrie,
+		Nested:             value.NestedMultiLine,
+		ProcessMask:        processMask,
+		Keywords:           value.Keywords,
+		Quotes:             value.Quotes,
 	}
 	LanguageFeaturesMutex.Unlock()
 }
